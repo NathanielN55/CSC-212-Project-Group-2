@@ -61,6 +61,8 @@ public:
     void inorder(ostream &os = cout);
     void postorder(ostream &os = cout);
 
+    void generateDotFile(LLRBNode *root, std::ostream &os);
+
     bool search(int data);
     void clear();
 };
