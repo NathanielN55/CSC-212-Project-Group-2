@@ -2,6 +2,7 @@
 // Created by Jack on 6/30/2023.
 //
 #include "llrbtree.h"
+#include <fstream>
 
 /*
  * Node Class Functions
@@ -240,6 +241,53 @@ void LLRBTree::inorder(std::ostream &os) {
 void LLRBTree::postorder(std::ostream &os) {
     this->postorder(this->root, os);
     os << "\n";
+}
+
+void LLRBTree::generateDotFile(LLRBNode *root, std::ostream &os){
+    // If we have reached a null pointer, recursively go back
+    if (!root) { return; }
+
+    // If we are at the root of the tree, start with the header of the dot file
+    if (root == this->root) {
+        os << "digraph G {" << std::endl << std::endl;
+    }
+
+    // Print out node/path data for the left side of the current node
+    if (root->left != nullptr){
+        os << '\t' << root->data << " -> " << root->left->data << " [color=" << '"';
+        if (root->left->red){
+            os << "red";
+        }
+        else {
+            os << "black";
+        }
+        os << '"' << "];" << std::endl; 
+    }
+
+    // Print out node/path data for the right side of the current node
+    if (root->right != nullptr){
+        os << '\t' << root->data << " -> " << root->right->data << " [color=" << '"';
+        if (root->right->red){
+            os << "red";
+        }
+        else {
+            os << "black";
+        }
+        os << '"' << "];" << std::endl; 
+    }
+
+    // Recursively move to the left node and follow the same pattern
+    this->generateDotFile(root->left, os);
+    // Recursively move to the right node and follow the same pattern
+    this->generateDotFile(root->right, os);
+
+    // If we have recursively returned to the root node, add the closing bracket at the end
+    if (root == this->root) {
+        os << std::endl << "}" << std::endl;
+    }
+
+    return;
+
 }
 
 bool LLRBTree::search(int data) {
