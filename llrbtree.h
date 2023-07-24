@@ -20,16 +20,16 @@ class LLRBNode {
 private:
     // Holds the relevant data
     int data;
+    // Holds the number of instances of this piece of data
+    int count;
     // Determines if this node is red (true) or black (false)
     bool red;
     // Pointers to this node's left and right child nodes
     LLRBNode* left;
     LLRBNode* right;
-    // Private setter for changing color of the node
-    void flip_color();
 public:
     LLRBNode();
-    LLRBNode(int data);
+    explicit LLRBNode(int data);
     ~LLRBNode();
 
     friend class LLRBTree;
@@ -38,20 +38,19 @@ public:
 class LLRBTree {
 private:
     // Tree's root node, from which all others are accessed via pointers
-    LLRBNode* root;
+    LLRBNode* _root;
 
     // Collection of methods for manipulating data, defined privately
     // so that they can be called within public versions of these functions
     // without allowing manual manipulation of the tree
     LLRBNode* insert(int data, LLRBNode* root);
     LLRBNode* remove(int data, LLRBNode* root);
-    LLRBNode* find_ios(LLRBNode* root, bool &disconnect);
 
     // Important functions for rotating the tree when necessary
-    LLRBNode* rotate_left(LLRBNode* root);
-    LLRBNode* rotate_right(LLRBNode* root);
+    static LLRBNode* rotate_left(LLRBNode* root);
+    static LLRBNode* rotate_right(LLRBNode* root);
     int height(LLRBNode* root);
-    void flip_color(LLRBNode* root);
+    static void flip_color(LLRBNode* root);
 
     // Functions for printing the tree in various named orders
     void preorder(LLRBNode* root, ostream &os);
@@ -60,7 +59,7 @@ private:
 
     void destroy(LLRBNode* root);
     bool search(int data, LLRBNode* root);
-    bool redNode(LLRBNode* node);
+    static bool redNode(LLRBNode* node);
 
 public:
     LLRBTree();

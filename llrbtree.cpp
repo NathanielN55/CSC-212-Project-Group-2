@@ -1,8 +1,9 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "misc-no-recursion"
 //
 // Created by Jack on 6/30/2023.
 //
 #include "llrbtree.h"
-#include <fstream>
 
 /*
  * Node Class Functions
@@ -12,6 +13,7 @@ LLRBNode::LLRBNode() {
     // Default constructor creates a red node with 0 as
     // the data and no child nodes
     this->data = 0;
+    this->count = 0;
     this->red = true;
     this->left = nullptr;
     this->right = nullptr;
@@ -21,14 +23,13 @@ LLRBNode::LLRBNode(int data) {
     // Same as default constructor except data is set
     // to parameter passed in
     this->data = data;
+    this->count = 1;
     this->red = true;
     this->left = nullptr;
     this->right = nullptr;
 }
 
-LLRBNode::~LLRBNode() {
-
-}
+LLRBNode::~LLRBNode() = default;
 
 /*
  * Tree Class Functions - Private
@@ -46,8 +47,10 @@ LLRBNode* LLRBTree::insert(int data, LLRBNode* root) {
     // recursively, moving down the tree until the above if statement runs
     if (data < root->data) {
         root->left = insert(data, root->left);
-    } else {
+    } else if (data > root->data) {
         root->right = insert(data, root->right);
+    } else {
+        root->count++;
     }
 
     // Next three 'if blocks' are about maintaining the three big
@@ -106,19 +109,6 @@ LLRBNode* LLRBTree::remove(int data, LLRBNode* root) {
     return root;
 }
 
-LLRBNode* LLRBTree::find_ios(LLRBNode *root, bool &disconnect) {
-    if (!root->left) {
-        disconnect = true; return root;
-    }
-    LLRBNode* temp = find_ios (root->left, disconnect);
-
-    if (disconnect) {
-        root->left = nullptr;
-        disconnect = false;
-    }
-    return temp;
-}
-
 // The next two functions define behavior for left and right rotations:
 // To rotate left, you assign the current node's right to a temporary variable,
 // then set the current node's right child to be the former right child's left.
@@ -132,7 +122,7 @@ LLRBNode* LLRBTree::rotate_left(LLRBNode* root) {
     return temp;
 }
 
-// To rotate right, the same happens i reverse, where the current node's left
+// To rotate right, the same happens in reverse, where the current node's left
 // is assigned to a temporary container, then the current node's left becomes the
 // former left child's right. Everything moves the same as in rotate left, but
 // in opposite directions, and again the new 'top' of the triangle is returned as
@@ -168,8 +158,6 @@ void LLRBTree::flip_color(LLRBNode *root) {
     } else {
         root->red = true;
     }
-
-    return;
 }
 
 // Breaks out of the function in case of empty tree, otherwise it
@@ -181,8 +169,6 @@ void LLRBTree::preorder(LLRBNode* root, ostream &os) {
     os << root->data << ":" << root->red << " ";
     this->preorder(root->left, os);
     this->preorder(root->right, os);
-
-    return;
 }
 
 // Same as preorder, but prints left subtree's inorder call,
@@ -193,8 +179,6 @@ void LLRBTree::inorder(LLRBNode* root, ostream &os) {
     this->inorder(root->left, os);
     os << root->data << ":" << root->red << " ";
     this->inorder(root->right, os);
-
-    return;
 }
 
 // Just like the other two, again with order altered slightly
@@ -206,13 +190,11 @@ void LLRBTree::postorder(LLRBNode *root, std::ostream &os) {
     this->postorder(root->left, os);
     this->postorder(root->right, os);
     os << root->data << ":" << root->red << " ";
-
-    return;
 }
 
 // Recursively moves down the tree calling destroy, then as
 // each call to destroy resolves, the current node's left and
-// right children are destroyed and we move back up the tree.
+// right children are destroyed, and we move back up the tree.
 void LLRBTree::destroy(LLRBNode *root) {
     if (!root) { return; }
 
@@ -222,7 +204,7 @@ void LLRBTree::destroy(LLRBNode *root) {
     delete root->right;
 }
 
-// Returns false if we've entered a non-existant node (such as
+// Returns false if we've entered a non-existent node (such as
 // an empty tree or end of a branch) and return true if the
 // current node matches our search. Uses recursive calls after
 // to move down the tree in appropriate direction based in the data input
@@ -251,53 +233,54 @@ bool LLRBTree::redNode(LLRBNode *node) {
 }
 
 /*
- * Tree Class Functions - Public: Many of these call the private version of the function,
-                                these are compartmentalized in order to keep properties of
-                                the tree private and not directly modifiable.
+ * Tree Class Functions - Public:
+    Many of these call the private version of the function,
+    these are compartmentalized in order to keep properties of
+    the tree private and not directly modifiable.
  */
 
 // Default constructor creates a tree with no nodes
 LLRBTree::LLRBTree() {
-    this->root = nullptr;
+    this->_root = nullptr;
 }
 
 // Destructor calls destroy to remove all nodes recursively
 LLRBTree::~LLRBTree() {
-    this->destroy(this->root);
+    this->destroy(this->_root);
 }
 
 // Calls private method, and also ensures that root is black
 // once the recursion unwinds
 void LLRBTree::insert(int data) {
-    this->root = this->insert(data, this->root);
-    this->root->red = false;
+    this->_root = this->insert(data, this->_root);
+    this->_root->red = false;
 }
 
 // Calls private method
 void LLRBTree::remove(int data) {
-    this->root = this->remove(data, this->root);
+    this->_root = this->remove(data, this->_root);
 }
 
 // Calls private method
 int LLRBTree::height() {
-    return this->height(this->root);
+    return this->height(this->_root);
 }
 
 // Calls private method
 void LLRBTree::preorder(std::ostream &os) {
-    this->preorder(this->root, os);
+    this->preorder(this->_root, os);
     os << "\n";
 }
 
 // Calls private method
 void LLRBTree::inorder(std::ostream &os) {
-    this->inorder(this->root, os);
+    this->inorder(this->_root, os);
     os << "\n";
 }
 
 // Calls private method
 void LLRBTree::postorder(std::ostream &os) {
-    this->postorder(this->root, os);
+    this->postorder(this->_root, os);
     os << "\n";
 }
 
@@ -306,7 +289,7 @@ void LLRBTree::generateDotFile(LLRBNode *root, std::ostream &os){
     if (!root) { return; }
 
     // If we are at the root of the tree, start with the header of the dot file
-    if (root == this->root) {
+    if (root == this->_root) {
         os << "digraph G {" << std::endl << std::endl;
     }
 
@@ -340,22 +323,23 @@ void LLRBTree::generateDotFile(LLRBNode *root, std::ostream &os){
     this->generateDotFile(root->right, os);
 
     // If we have recursively returned to the root node, add the closing bracket at the end
-    if (root == this->root) {
+    if (root == this->_root) {
         os << std::endl << "}" << std::endl;
     }
 
-    return;
 
 }
 
 // Calls a private method
 bool LLRBTree::search(int data) {
-    return this->search(data, this->root);
+    return this->search(data, this->_root);
 }
 
 // Calls destroy to empty the tree without deleting the structure entirely,
 // like the destructor would do
 void LLRBTree::clear() {
-    this->destroy(this->root);
-    this->root = nullptr;
+    this->destroy(this->_root);
+    this->_root = nullptr;
 }
+
+#pragma clang diagnostic pop
