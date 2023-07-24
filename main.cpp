@@ -8,9 +8,12 @@ void print_tree(LLRBTree* tree, int mode, std::ofstream& os);
 int main(int argc, char *argv[]){
     ifstream infile(argv[1]);
     int mode = stoi(argv[2]);
-    string fname(argv[3]);
+    string txtname(argv[3]);
+    string dotname(argv[3]);
+    txtname += ".txt";
+    dotname += ".dot";
 
-    ofstream outfile(fname);
+    ofstream txtfile(txtname);
 
     LLRBTree tree;
 
@@ -25,9 +28,17 @@ int main(int argc, char *argv[]){
 
     }
 
-    print_tree(&tree, mode, outfile);
-    outfile << "Tree Height: " << tree.height() << endl;
-    outfile.close();
+    print_tree(&tree, mode, txtfile);
+    txtfile << "Tree Height: " << tree.height() << endl;
+    txtfile.close();
+
+
+    ofstream dotfile(dotname);
+
+    tree.generateDotFile(dotfile);
+
+    dotfile.close();
+    
 }
 
 /*
