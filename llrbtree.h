@@ -56,6 +56,7 @@ private:
     void preorder(LLRBNode* root, ostream &os);
     void inorder(LLRBNode* root, ostream &os);
     void postorder(LLRBNode* root, ostream &os);
+    void generateDotFile(LLRBNode *root, std::ostream &os);
 
     void destroy(LLRBNode* root);
     bool search(int data, LLRBNode* root);
@@ -74,7 +75,7 @@ public:
     void inorder(ostream &os = cout);
     void postorder(ostream &os = cout);
 
-    void generateDotFile(LLRBNode *root, std::ostream &os);
+    void generateDotFile(ostream &os = cout);
 
     bool search(int data);
     void clear();
