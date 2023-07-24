@@ -3,7 +3,7 @@
 
 ### Compilation Instructions
 
-Make sure you have the files llrbtree.cpp, llrbtree.h, and main.cpp downloaded and stored in the same file. To compile, open your terminal, navigate to the directory where you stored the downloaded code files, and run the following command:
+Make sure you have the files llrbtree.cpp, llrbtree.h, and main.cpp downloaded from this repository and stored in the same file. To compile, open your terminal, navigate to the directory where you stored the downloaded code files, and run the following command:
 
 `g++ -std=c++11 llrbtree.cpp main.cpp -o llrbtree`
 
