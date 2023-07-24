@@ -81,16 +81,26 @@ LLRBNode* LLRBTree::insert(int data, LLRBNode* root) {
 }
 
 LLRBNode* LLRBTree::remove(int data, LLRBNode* root) {
+    // If no root, nothing to clear, return null
     if (!root) {
         return nullptr;
     }
+    // If we've found the data,
     if (data == root->data) {
+        // If there's more than one instance, delete one instance
+        if (root->count > 1) {
+            root->count --; return root;
+        }
+        // Otherwise delete the entire node
         LLRBNode* temp;
+        // If children are both null pointers, can safely delete root
+        // and return null pointer
         if (root->left == root->right) {
             delete root; return nullptr;
         }
-        if (!root->left != !root->right) {
-            root->left ? temp = root->left: temp = root->left;
+        // Otherwise handle child nodes
+        if (root->left != root->right) {
+            root->left ? temp = root->left : temp = root->left;
             delete root; return temp;
         }
         temp = root->right;
@@ -101,6 +111,9 @@ LLRBNode* LLRBTree::remove(int data, LLRBNode* root) {
         root->right = remove(temp->data, root->right);
         return root;
     }
+    // If the data is less than our current position, go left
+    // down the tree and recurse, otherwise go right down the
+    // tree and recurse.
     if (data < root->data) {
         root->left = remove(data, root->left);
     } else {
