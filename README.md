@@ -13,9 +13,9 @@ This will create your executable file `llrbtree`.
 
 Before you run the program, make sure you have your input text file in the same folder as your executable file `llrbtree`. To run the program, open your terminal, navigate to the directory where you stored the executable file and the input file, and run the following command:
 
-`./llrbtree <in_file_name> <mode> <out_file_name>`
+`./llrbtree <in_file_name> <mode> <txt_out_file_name> <dot_out_file_name>`
 
-`<in_file_name>` is the name of the input .txt file. Make sure to include the .txt extension when you type this command line argument into the terminal. `<out_file_name>` is the name of the two output files. Do not include an extension in this command line argument; the program will generate two output files with the same name, one with the .txt extension and one with the .dot extension. `<mode>` indicates the mode of the .txt output as follows:
+`<in_file_name>` is the name of the input .txt file. Make sure to include the .txt extension when you type this command line argument into the terminal. `<txt_out_file_name>` is the name of the output text file, and `<dot_out_file_name>` is the name of the output dot file. Do not include an extension in these command line arguments; the program will generate the extension automatically. `<mode>` indicates the mode of the .txt output as follows:
 
 - 1: Prints out a preorder traversal of the tree
 - 2: Prints out an inorder traversal of the tree
