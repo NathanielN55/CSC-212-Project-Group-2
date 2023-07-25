@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
     int mode = stoi(argv[2]);
     // Names of the output files
     string txtname(argv[3]);
-    string dotname(argv[3]);
+    string dotname(argv[4]);
     txtname += ".txt";
     dotname += ".dot";
 
@@ -46,6 +46,9 @@ int main(int argc, char *argv[]){
     tree.generateDotFile(dotfile);
     // Close the dot file
     dotfile.close();
+
+    std::cout << argv[1] << " has been transformed into a Binary Search Tree.\nIt was returned as text file named "
+    << txtname << " and a dot file named " << dotname << std::endl;
     
 }
 
